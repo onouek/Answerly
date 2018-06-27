@@ -75,8 +75,12 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'answerly',
+        'USER': 'answerly',
+        'PASSWORD': 'development',
+        'PORT': 5432,
+        'HOST': '127.0.0.1',
     }
 }
 
