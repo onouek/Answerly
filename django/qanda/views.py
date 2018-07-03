@@ -1,9 +1,12 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
 from django.http.response import HttpResponseBadRequest, HttpResponseRedirect
+from django.urls.base import reverse
+from django.utils import timezone
 from django.views.generic import (
     DayArchiveView,
     DetailView,
+    RedirectView,
     UpdateView,
     )
 from qanda.forms import QuestionForm, AnswerForm, AnswerAcceptanceForm
@@ -91,6 +94,19 @@ class DailyQuestionList(DayArchiveView):
     date_field = 'created'
     month_format = '%m'
     allow_empty = True
+
+
+class TodaysQuestionList(RedirectView):
+    def get_redirect_url(self, *args, **kwargs):
+        today = timezone.now()
+        return reverse(
+            'questions:daily_questions',
+            kwargs={
+                'day': today.day,
+                'month': today.month,
+                'year': today.year,
+            }
+        )
 
 
 class UpdateAnswerAcceptanceView(LoginRequiredMixin, UpdateView):
