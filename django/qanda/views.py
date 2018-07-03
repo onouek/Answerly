@@ -31,7 +31,7 @@ class AskQuestionView(LoginRequiredMixin, CreateView):
 
 class CreateAnswerView(LoginRequiredMixin, CreateView):
     form_class = AnswerForm
-    template_name = 'cueeneh/create_answer.html'
+    template_name = 'qanda/create_answer.html'
 
     def get_initial(self):
         return {
