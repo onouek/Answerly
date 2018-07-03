@@ -34,6 +34,7 @@ INSTALLED_APPS = [
     'user',
     'qanda',
     'markdownify',
+    'crispy_forms',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -136,3 +137,5 @@ MARKDOWNIFY_WHITELIST_TAGS = [
     'a', 'blockquote', 'code', 'em', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
     'h7', 'li', 'ol', 'p', 'strong', 'ul',
 ]
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
