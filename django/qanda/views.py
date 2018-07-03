@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import CreateView
 from django.http.response import HttpResponseBadRequest, HttpResponseRedirect
 from django.views.generic import (
+    DayArchiveView,
     DetailView,
     UpdateView,
     )
@@ -83,6 +84,13 @@ class QuestionDetailView(DetailView):
                 'reject_form': self.REJECT_FORM,
             })
         return ctx
+
+
+class DailyQuestionList(DayArchiveView):
+    queryset = Question.objects.all()
+    date_field = 'created'
+    month_format = '%m'
+    allow_empty = True
 
 
 class UpdateAnswerAcceptanceView(LoginRequiredMixin, UpdateView):
