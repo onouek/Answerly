@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth import get_user_model
-from quanda.model import Question
+from qanda.models import Question
 
 
 class QuestionForm(forms.ModelForm):
