@@ -133,8 +133,8 @@ STATICFILES_DIRS = [
 ]
 
 LOGIN_URL = 'user:login'
-LOGIN_REDIRECT_URL = 'questions:index'
-LOGOUT_REDIRECT_URL = 'questions:index'
+LOGIN_REDIRECT_URL = 'qanda:index'
+LOGOUT_REDIRECT_URL = 'qanda:index'
 
 MARKDOWINFY_STRIP = False
 MARKDOWNIFY_WHITELIST_TAGS = [
