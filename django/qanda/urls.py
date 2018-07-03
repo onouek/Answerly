@@ -10,4 +10,7 @@ urlpatterns = [
     path('q/<int:pk>',
     views.CreateAnswerView.as_view(),
     name='answer_question'),
+    path('a/<int:pk>/accept',
+    views.UpdateAnswerAcceptanceView.as_view(),
+    name='update_answer_acceptance'),
 ]
