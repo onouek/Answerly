@@ -9,7 +9,7 @@ from django.views.generic import (
     RedirectView,
     UpdateView,
     TemplateView)
-from cueeneh.service.elasticsearch import search_for_questions
+from qanda.service.elasticsearch import search_for_questions
 from qanda.forms import QuestionForm, AnswerForm, AnswerAcceptanceForm
 from qanda.models import Question, Answer
 
