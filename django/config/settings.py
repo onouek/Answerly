@@ -143,3 +143,7 @@ MARKDOWNIFY_WHITELIST_TAGS = [
 ]
 
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+ES_INDEX = 'answerly'
+ES_HOST = 'localhost'
+ES_PORT = '9200'
