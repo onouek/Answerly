@@ -3,9 +3,10 @@ from unittest.mock import patch
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TestCase, RequestFactory
-from elasticsearch import Elasticsearch
-from qanda.factories import QuestionFactory
+
+from selenium.webdriver.chrome.webdriver import WebDriver
 
 from qanda.factories import QuestionFactory, DEFAULT_BODY_HTML
 from qanda.models import Question
@@ -166,3 +167,40 @@ class QuestionDetailViewTestCase(TestCase):
             body=DEFAULT_BODY_HTML,
         )
         self.assertInHTML(question_needle, rendered_content)
+
+
+class AskQuestionTestCase(StaticLiveServerTestCase):
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.selenium = WebDriver(executable_path=settings.CHROMEDRIVER)
+        cls.selenium.implicitly_wait(10)
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.selenium.quit()
+        super().tearDownClass()
+
+    def setUp(self):
+        self.user = UserFactory()
+
+    def test_cant_ask_blank_question(self):
+        initial_question_count = Question.objects.count()
+
+        self.selenium.get('%s%s' % (self.live_server_url, '/user/login'))
+
+        username_input = self.selenium.find_element_by_name("username")
+        username_input.send_keys(self.user.username)
+        password_input = self.selenium.find_element_by_name("password")
+        password_input.send_keys(UserFactory.password)
+        self.selenium.find_element_by_id('log_in').click()
+
+        self.selenium.find_element_by_link_text("Ask").click()
+        ask_question_url = self.selenium.current_url
+        submit_btn = self.selenium.find_element_by_id('ask')
+        submit_btn.click()
+        after_empty_submit_click = self.selenium.current_url
+
+        self.assertEqual(ask_question_url, after_empty_submit_click)
+        self.assertEqual(initial_question_count, Question.objects.count())

@@ -147,3 +147,5 @@ CRISPY_TEMPLATE_PACK = 'bootstrap4'
 ES_INDEX = 'answerly'
 ES_HOST = 'localhost'
 ES_PORT = '9200'
+
+CHROMEDRIVER = os.path.join(BASE_DIR, '../chromedriver/chromedriver')
