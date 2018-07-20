@@ -6,8 +6,11 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, RequestFactory
 from elasticsearch import Elasticsearch
 from qanda.factories import QuestionFactory
+
+from qanda.factories import QuestionFactory, DEFAULT_BODY_HTML
 from qanda.models import Question
 from qanda.views import DailyQuestionList
+from user.factories import UserFactory
 
 QUESTION_CREATED_STRFTIME = '%Y-%m-%d %H:%M'
 
@@ -102,3 +105,64 @@ class DailyQuestionListTestCase(TestCase):
                 date=question.created.strftime(QUESTION_CREATED_STRFTIME)
             )
             self.assertInHTML(needle, rendered_content)
+
+
+class QuestionDetailViewTestCase(TestCase):
+    QUESTION_DISPLAY_SNIPPET = '''
+    <div class="question" >
+      <div class="meta col-sm-12" >
+        <h1 >{title}</h1 >
+        Asked by {user} on {date}
+      </div >
+      <div class="body col-sm-12" >
+        {body}
+      </div >
+    </div >'''
+    LOGIN_TO_POST_ANSWERS = 'Login to post answers.'
+    NO_ANSWERS_SNIPPET = '<li class="answer" >No answers yet!</li >'
+
+    def test_anonymous_user_cannot_post_answers(self):
+        question = QuestionFactory()
+
+        response = self.client.get('/q/{}'.format(question.id))
+        rendered_content = response.rendered_content
+
+        self.assertEqual(200, response.status_code)
+
+        template_names = [t.name for t in response.templates]
+        self.assertNotIn('qanda/common/post_answer.html', template_names)
+        self.assertIn(self.LOGIN_TO_POST_ANSWERS, rendered_content)
+
+        self.assertInHTML(self.NO_ANSWERS_SNIPPET, rendered_content)
+
+        question_needle = self.QUESTION_DISPLAY_SNIPPET.format(
+            title=question.title,
+            user=question.user.username,
+            date=question.created.strftime(QUESTION_CREATED_STRFTIME),
+            body=DEFAULT_BODY_HTML,
+        )
+        self.assertInHTML(question_needle, rendered_content)
+    
+    def test_logged_in_user_can_post_answers(self):
+        question = QuestionFactory()
+
+        self.assertTrue(self.client.login(
+            username=question.user.username,
+            password=UserFactory.password)
+        )
+        response = self.client.get('/q/{}'.format(question.id))
+        rendered_content = response.rendered_content
+
+        self.assertEqual(200, response.status_code)
+        self.assertInHTML(self.NO_ANSWERS_SNIPPET, rendered_content)
+
+        template_names = [t.name for t in response.templates]
+        self.assertIn('qanda/common/post_answer.html', template_names)
+
+        question_needle = self.QUESTION_DISPLAY_SNIPPET.format(
+            title=question.title,
+            user=question.user.username,
+            date=question.created.strftime(QUESTION_CREATED_STRFTIME),
+            body=DEFAULT_BODY_HTML,
+        )
+        self.assertInHTML(question_needle, rendered_content)
