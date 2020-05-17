@@ -8,10 +8,10 @@ DATABASES['default']['NAME'] = 'answerly'
 DATABASES['default']['USER'] = 'answerly'
 DATABASES['default']['PASSWORD'] = 'development'
 DATABASES['default']['PORT'] = 5432
-DATABASES['default']['HOST'] = 'localhost'
+DATABASES['default']['HOST'] = 'db'
 
 ES_INDEX = 'answerly'
-ES_HOST = 'localhost'
+ES_HOST = 'es'
 ES_PORT = '9200'
 
 TEMPLATES[0]['OPTIONS']['context_processors'] += [
