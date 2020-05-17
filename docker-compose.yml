@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  db:
+    build: docker/psql
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - DJANGO_DB_USER
+      - DJANGO_DB_NAME
+      - DJANGO_DB_PASSWORD
+  es:
+    build: docker/elastic_search
+    restart: always
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      - discovery.type=single-node
+  web:
+    build: .
+    restart: always
+    ports:
+      - "80:80"
+    depends_on:
+      - db
+    links:
+      - es
+    environment:
+      - DJANGO_SETTINGS_MODULE
+      - DJANGO_SECRET_KEY
+      - DJANGO_LOG_LEVEL
+      - DJANGO_LOG_FILE
+      - DJANGO_ALLOWED_HOSTS
+      - DJANGO_DB_NAME
+      - DJANGO_DB_USER
+      - DJANGO_DB_PASSWORD
+      - DJANGO_DB_HOST
+      - DJANGO_DB_PORT
+      - DJANGO_ES_INDEX
+      - DJANGO_ES_HOST
+      - DJANGO_ES_PORT
