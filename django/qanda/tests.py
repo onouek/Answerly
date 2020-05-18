@@ -6,7 +6,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.test import TestCase, RequestFactory
 
-from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium import webdriver
 
 from qanda.factories import QuestionFactory, DEFAULT_BODY_HTML
 from qanda.models import Question
@@ -174,7 +174,10 @@ class AskQuestionTestCase(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        cls.selenium = WebDriver(executable_path=settings.CHROMEDRIVER)
+        options = webdriver.ChromeOptions()
+        options.add_argument('--headless')
+        options.add_argument('--no-sandbox')
+        cls.selenium = webdriver.Chrome(executable_path=settings.CHROMEDRIVER, options=options)
         cls.selenium.implicitly_wait(10)
 
     @classmethod

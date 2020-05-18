@@ -9,6 +9,11 @@ RUN apt-get install -y \
     openjdk-8-jre-headless \
     python3 \
     python3-pip
+# install google-chrome
+RUN echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' | \
+    tee /etc/apt/sources.list.d/google-chrome.list && \
+    curl https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add && \
+    apt-get update && apt-get install -y google-chrome-stable
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 # add code and directories
 RUN mkdir /answerly
@@ -17,6 +22,7 @@ COPY requirements* /answerly/
 COPY django/ /answerly/django
 COPY scripts/ /answerly/scripts
 COPY apache/ /answerly/apache
+COPY chromedriver/ /answerly/chromedriver
 RUN mkdir /var/log/answerly/
 RUN touch /var/log/answerly/answerly.log
 RUN chown www-data /var/log/answerly/answerly.log
