@@ -38,7 +38,7 @@ To start containers locally, run the following command:
 $ docker-compose up -d
 ```
 
-To migrate database,, run the following command:
+To migrate database, run the following command:
 
 ```sh
 $ docker-compose exec web /answerly/venv/bin/python /answerly/django/manage.py migrate
