@@ -1,4 +1,4 @@
-FROM phusion/baseimage
+FROM phusion/baseimage:master
 # install packages
 RUN apt-get -y update
 RUN apt-get install -y \
